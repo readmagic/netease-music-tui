@@ -78,19 +78,19 @@ where
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .title("Search")
+                .title("搜索")
                 .title_style(get_color(highlight_state))
                 .border_style(get_color(highlight_state)),
         )
         .render(f, chunks[0]);
 
     let block = Block::default()
-        .title("Help")
+        .title("帮助")
         .borders(Borders::ALL)
         .border_style(Style::default().fg(Color::Gray))
         .title_style(Style::default().fg(Color::Gray));
 
-    Paragraph::new([Text::raw("Type ?")].iter())
+    Paragraph::new([Text::raw("输入 ?")].iter())
         .block(block)
         .style(Style::default().fg(Color::Gray))
         .render(f, chunks[1]);
@@ -180,22 +180,22 @@ where
         .split(layout_chunk);
 
     let state_title = if app.player.is_playing() {
-        "Playing"
+        "播放"
     } else {
-        "Pause "
+        "暂停"
     };
 
     let repeat_text = match app.fm_state {
-        true => "FM",
+        true => "电台",
         false => match app.repeat_state {
-            RepeatState::Off => "Off",
-            RepeatState::Track => "Track",
-            RepeatState::All => "All",
-            RepeatState::Shuffle => "Shuffle",
+            RepeatState::Off => "顺序播放",
+            RepeatState::Track => "单曲循环",
+            RepeatState::All => "列表循环",
+            RepeatState::Shuffle => "随机播放",
         },
     };
 
-    let title = format!("{} | Repeat: {}", state_title, repeat_text);
+    let title = format!("{} | 重复: {}", state_title, repeat_text);
 
     let current_route = app.get_current_route();
     let highlight_state = (
@@ -208,7 +208,7 @@ where
             track.name.to_owned().unwrap(),
             match &track.artists {
                 Some(artists) => create_artist_string(&artists),
-                None => "Unknown".to_string(),
+                None => "未知".to_string(),
             },
         ),
         None => (String::new(), String::new()),
@@ -278,7 +278,7 @@ where
     draw_selectable_list(
         f,
         layout_chunk,
-        "Recommend",
+        "推荐",
         &RECOMMEND_OPTIONS,
         highlight_state,
         Some(app.recommend.selected_index),
@@ -307,7 +307,7 @@ where
     draw_selectable_list(
         f,
         layout_chunk,
-        "Playlists",
+        "歌单",
         &playlist_items,
         highlight_state,
         app.selected_playlist_index,
@@ -348,19 +348,19 @@ where
 {
     let header = [
         TableHeader {
-            text: "ID",
+            text: "序号",
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "Title",
+            text: "标题",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
         TableHeader {
-            text: "Artist",
+            text: "作者",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
         TableHeader {
-            text: "Album",
+            text: "专辑",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
     ];
@@ -495,7 +495,7 @@ where
     );
 
     Block::default()
-        .title("Welcome!")
+        .title("欢迎!")
         .borders(Borders::ALL)
         .title_style(get_color(highlight_state))
         .border_style(get_color(highlight_state))
@@ -505,13 +505,13 @@ where
         "
                  __
   ____    ____ _/  |_   ____  _____     ______  ____
- /    \\ _/ __ \\\\   __\\_/ __ \\ \\__  \\   /  ___/_/ __ \\ 
+ /    \\ _/ __ \\\\   __\\_/ __ \\ \\__  \\   /  ___/_/ __ \\
 |   |  \\\\  ___/ |  |  \\  ___/  / __ \\_ \\___ \\ \\  ___/
 |___|  / \\___  >|__|   \\___  >(____  //____  > \\___  >
      \\/      \\/            \\/      \\/      \\/      \\/
         .__                      .___                        .__
   ____  |  |    ____   __ __   __| _/   _____   __ __  ______|__|  ____
-_/ ___\\ |  |   /  _ \\ |  |  \\ / __ |   /     \\ |  |  \\/  ___/|  |_/ ___\\ 
+_/ ___\\ |  |   /  _ \\ |  |  \\ / __ |   /     \\ |  |  \\/  ___/|  |_/ ___\\
 \\  \\___ |  |__(  <_> )|  |  // /_/ |  |  Y Y  \\|  |  /\\___ \\ |  |\\  \\___
  \\___  >|____/ \\____/ |____/ \\____ |  |__|_|  /|____//____  >|__| \\___  >
      \\/                           \\/        \\/            \\/          \\/
@@ -557,12 +557,12 @@ where
         current_route.hovered_block == ActiveBlock::PersonalFm,
     );
     let display_block = Block::default()
-        .title(&"PERSONAL FM")
+        .title(&"个人电台")
         .borders(Borders::ALL)
         .title_style(get_color(highlight_state))
         .border_style(get_color(highlight_state));
 
-    let text = vec![Text::raw("Your Personal FM")];
+    let text = vec![Text::raw("你的个人电台")];
 
     Paragraph::new(text.iter())
         .style(Style::default().fg(Color::White))
@@ -642,7 +642,7 @@ where
             .block(
                 Block::default()
                     .borders(Borders::ALL)
-                    .title("Search Result")
+                    .title("搜索结果")
                     .title_style(get_color(highlight_state))
                     .border_style(get_color(highlight_state)),
             )
@@ -656,7 +656,7 @@ where
             0 => draw_selectable_list(
                 f,
                 chunks[1],
-                "Songs",
+                "歌曲",
                 &songs,
                 highlight_state,
                 Some(app.search_results.selected_tracks_index),
@@ -664,7 +664,7 @@ where
             1 => draw_selectable_list(
                 f,
                 chunks[1],
-                "Artists",
+                "歌手",
                 &artists,
                 highlight_state,
                 Some(app.search_results.selected_artists_index),
@@ -672,7 +672,7 @@ where
             2 => draw_selectable_list(
                 f,
                 chunks[1],
-                "Albums",
+                "专辑",
                 &albums,
                 highlight_state,
                 Some(app.search_results.selected_albums_index),
@@ -680,7 +680,7 @@ where
             3 => draw_selectable_list(
                 f,
                 chunks[1],
-                "Playlists",
+                "歌单",
                 &playlists,
                 highlight_state,
                 Some(app.search_results.selected_playlists_index),
@@ -688,7 +688,7 @@ where
             4 => draw_selectable_list(
                 f,
                 chunks[1],
-                "djradio",
+                "电台",
                 &djradios,
                 highlight_state,
                 Some(app.search_results.selected_djradio_index),
@@ -711,51 +711,47 @@ where
 
     let white = Style::default().fg(Color::White);
     let gray = Style::default().fg(Color::White);
-    let header = ["Description", "Event", "Context"];
+    let header = ["描述", "按键", "范围"];
 
     let help_docs = vec![
-        vec!["Increase volume", "+", "General"],
-        vec!["Decrease volume", "-", "General"],
-        vec!["Skip to next track", "n", "General"],
-        vec!["Skip to previous track", "p", "General"],
-        vec!["Toggle repeat mode", "r", "General"],
-        vec!["Move selection left", "h | <Left Arrow Key> ", "General"],
-        vec!["Move selection down", "j | <Down Arrow Key> ", "General"],
-        vec!["Move selection up", "k | <Up Arrow Key> ", "General"],
-        vec!["Move selection right", "l | <Right Arrow Key> ", "General"],
-        vec!["Jump to currently playing album", "a", "General"],
-        vec!["Enter Search", "/", "General"],
-        vec!["Pause/Resume playback", "<Space>", "General"],
-        vec!["Fullsize playbar", "f", "General"],
+        vec!["增加音量", "+", "全体"],
+        vec!["减少音量", "-", "全体"],
+        vec!["跳到下一首曲目", "n", "全体"],
+        vec!["跳到上一首曲目", "p", "全体"],
+        vec!["切换重复模式", "r", "全体"],
+        vec!["向左移动", "h", "全体"],
+        vec!["向下移动", "j", "全体"],
+        vec!["向上移动", "k", "全体"],
+        vec!["向右移动", "l", "全体"],
+        vec!["跳转到当前播放的专辑", "a", "全体"],
+        vec!["进入搜索", "/", "全体"],
+        vec!["暂停/恢复播放", "<Space>", "全体"],
+        vec!["显示歌词", "f", "全体"],
+        vec!["退出", "q", "全体", ],
+        vec!["进入悬停模式", "<Esc>", "全体"],
+        vec!["进入激活模式", "<Enter>", "全体"],
+        vec!["喜欢当前的播放曲目", "<Ctrl+y>", "全体"],
+        vec!["不喜欢当前的播放曲目", "<Ctrl+d>", "全体"],
+        vec!["删除曲目", "<Ctrl+t>", "电台区域"],
+        vec!["删除整行", "<Ctrl+u>", "搜索"],
+        vec!["搜索内容", "<Enter>", "搜索"],
+        vec!["跳转到开头", "<Ctrl+a>", "搜索"],
+        vec!["跳转到结尾", "<Ctrl+e>", "搜索"],
         vec![
-            "Go back or exit when nowhere left to back to",
-            "q",
-            "General",
-        ],
-        vec!["Enter hover mode", "<Esc>", "General"],
-        vec!["Enter active mode", "<Enter>", "General"],
-        vec!["Like current playing track", "<Ctrl+y>", "General"],
-        vec!["Dislike current playing track", "<Ctrl+d>", "General"],
-        vec!["move track to trash", "<Ctrl+t>", "FM block"],
-        vec!["Delete entire input", "<Ctrl+u>", "Search input"],
-        vec!["Search with input text", "<Enter>", "Search input"],
-        vec!["Jump to start of input", "<Ctrl+a>", "Search input"],
-        vec!["Jump to end of input", "<Ctrl+e>", "Search input"],
-        vec![
-            "Subscribe current hover playlist",
+            "订阅当前播放列表",
             "<Alt+s>",
-            "Playlist block",
+            "播放区域",
         ],
         vec![
-            "Unsubscribe current hover playlist",
+            "取消订阅当前播放列表",
             "<Alt+d>",
-            "Playlist block",
+            "播放区域",
         ],
-        vec!["Jump to next page", "<Ctrl+f>", "Search result | top list"],
+        vec!["跳转到下一页", "<Ctrl+f>", "搜索或顶部列表"],
         vec![
-            "Jump to previous page",
+            "跳转到上一页",
             "<Ctrl+b>",
-            "Search result | top list",
+            "搜索或顶部列表",
         ],
     ];
 
@@ -768,7 +764,7 @@ where
             Block::default()
                 .borders(Borders::ALL)
                 .style(white)
-                .title("Help (press <Esc> to go back)")
+                .title("帮助 (按 <Esc> 返回)")
                 .title_style(gray)
                 .border_style(gray),
         )
@@ -797,7 +793,7 @@ where
         .block(
             Block::default()
                 .borders(Borders::LEFT | Borders::TOP | Borders::BOTTOM)
-                .title("Playing")
+                .title("播放中")
                 .title_style(get_color(highlight_state))
                 .border_style(get_color(highlight_state)),
         )
@@ -886,11 +882,11 @@ where
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "Album Name",
+            text: "专辑名称",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
         TableHeader {
-            text: "Artist",
+            text: "作者",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
     ];
@@ -913,7 +909,7 @@ where
                     }
                 })
                 .collect::<Vec<TableItem>>(),
-            title: format!("Albums",),
+            title: format!("专辑",),
             selected_index: album_list.selected_index,
         }),
         None => None,
@@ -949,7 +945,7 @@ where
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "Title",
+            text: "标题",
             width: get_percentage_width(layout_chunk.width, 0.8),
         },
     ];
@@ -1007,19 +1003,19 @@ where
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "Title",
+            text: "标题",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
         TableHeader {
-            text: "Count",
+            text: "数量",
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "Creator",
+            text: "创建者",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
         TableHeader {
-            text: "Tags",
+            text: "标签",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
     ];
@@ -1052,7 +1048,7 @@ where
                     }
                 })
                 .collect::<Vec<TableItem>>(),
-            title: format!("Discover Playlists",),
+            title: format!("寻找歌单",),
             selected_index: playlist.selected_index,
         }),
         None => None,
@@ -1087,11 +1083,11 @@ where
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "Album Name",
+            text: "专辑名称",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
         TableHeader {
-            text: "Artist",
+            text: "歌手",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
     ];
@@ -1118,7 +1114,7 @@ where
                     }
                 })
                 .collect::<Vec<TableItem>>(),
-            title: format!("Discover Albums",),
+            title: format!("寻找专辑",),
             selected_index: album_list.selected_index,
         }),
         None => None,
@@ -1153,7 +1149,7 @@ where
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "Artist",
+            text: "歌手",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
     ];
@@ -1176,7 +1172,7 @@ where
                     }
                 })
                 .collect::<Vec<TableItem>>(),
-            title: format!("Discover Artists",),
+            title: format!("寻找歌手",),
             selected_index: artist_list.selected_index,
         }),
         None => None,
@@ -1211,7 +1207,7 @@ where
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "DjRadio Name",
+            text: "电台名称",
             width: get_percentage_width(layout_chunk.width, 0.3),
         },
     ];
@@ -1234,7 +1230,7 @@ where
                     }
                 })
                 .collect::<Vec<TableItem>>(),
-            title: format!("My Subscribe DjRadio",),
+            title: format!("我订阅的电台",),
             selected_index: djradio_list.selected_index,
         }),
         None => None,
@@ -1269,15 +1265,15 @@ where
             width: get_percentage_width(layout_chunk.width, 0.05),
         },
         TableHeader {
-            text: "Dj Program Name",
+            text: "电台名称",
             width: get_percentage_width(layout_chunk.width, 0.5),
         },
         TableHeader {
-            text: "listener Count",
+            text: "听众数量",
             width: get_percentage_width(layout_chunk.width, 0.2),
         },
         TableHeader {
-            text: "Date",
+            text: "日期",
             width: get_percentage_width(layout_chunk.width, 0.2),
         },
     ];

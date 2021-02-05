@@ -19,12 +19,12 @@ const DEFAULT_ROUTE: Route = Route {
 };
 
 pub const RECOMMEND_OPTIONS: [&str; 6] = [
-    "My Playlist",
-    "Discover",
-    "Personal FM",
-    "Hot Albums",
-    "Hot Artists",
-    "Subed DjRadios",
+    "我的歌单",
+    "发现",
+    "个人电台",
+    "热门专辑",
+    "热门歌手",
+    "订阅的电台",
 ];
 
 #[derive(Clone, PartialEq, Debug)]
@@ -265,11 +265,11 @@ impl App {
                 selected_djradio_page: 0,
             },
             tabs: TabsState::new(vec![
-                "Songs".to_string(),
-                "Artists".to_string(),
-                "Albums".to_string(),
-                "Playlists".to_string(),
-                "DjRadios".to_string(),
+                "歌曲".to_string(),
+                "歌手".to_string(),
+                "专辑".to_string(),
+                "歌单".to_string(),
+                "电台".to_string(),
             ]),
             playing_circle: Circle::default(),
             circle_flag: true,
