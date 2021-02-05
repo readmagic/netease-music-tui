@@ -24,7 +24,7 @@ use super::model::artist::{Artist, TopArtistRes};
 use super::model::dj::{DjProgram, DjRadio, ProgramDetailRes, ProgramsRes, SubDjRadioRes};
 use super::model::lyric::{Lyric, LyricRes};
 use super::model::playlist::{
-    PersonalFmRes, Playlist, PlaylistDetail, PlaylistDetailRes, PlaylistRes, TopPlaylistRes, Track, UidPlaylistRes,
+    PersonalFmRes, Playlist, PlaylistDetail, PlaylistDetailRes, PlaylistRes, TopPlaylistRes, Track, UidPlaylistRes
 };
 use super::model::search::{
     SearchAlbumResult, SearchAlbums, SearchArtistResult, SearchArtists, SearchDjRadios,
@@ -151,7 +151,7 @@ impl CloudMusic {
                 .unwrap(),
         );
         headers.insert(HOST, "music.163.com".parse().unwrap());
-        headers.insert(ACCEPT_ENCODING, "gzip,deflate,br".parse().unwrap());
+        headers.insert(ACCEPT_ENCODING, "gzip,deflate".parse().unwrap());
 
         match method {
             Method::POST => {
@@ -190,7 +190,6 @@ impl CloudMusic {
         let mut buf = String::new();
 
         self.store_cookies(&response);
-
         response
             .read_to_string(&mut buf)
             .expect("failed to read response");
@@ -220,7 +219,7 @@ impl CloudMusic {
         let email_regex = regex::Regex::new(
             r"^([a-z0-9_+]([a-z0-9_+.]*[a-z0-9_+])?)@([a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6})",
         )
-            .unwrap();
+        .unwrap();
         if email_regex.is_match(username) {
             self.email_login(username, password)
         } else {
@@ -265,19 +264,27 @@ impl CloudMusic {
     }
 
     pub fn login_status(&self) -> Result<Option<Profile>, failure::Error> {
-        let x = 1;
-        match x {
-            1 => {
-                Ok(Some(Profile {
-                    userId: Some(1968728498),
-                    nickname: Some("古德拉玛".to_string()),
-                    gender: None,
-                    follows: None,
-                    followeds: None,
-                }))
+        let url = format!("/");
+        match self.get(&url, &mut HashMap::new()) {
+            Ok(r) => {
+                let re = regex::Regex::new(r#"userId:(?P<id>\d+),nickname:"(?P<nickname>\w+)""#)
+                    .unwrap();
+                if let Some(cap) = re.captures(&r) {
+                    let uid = cap.name("id").unwrap().as_str().parse::<i32>().unwrap_or(0);
+                    let nickname = cap.name("nickname").unwrap().as_str().to_owned();
+                    Ok(Some(Profile {
+                        userId: Some(uid),
+                        nickname: Some(nickname),
+                        gender: None,
+                        follows: None,
+                        followeds: None,
+                    }))
+                } else {
+                    Ok(None)
+                }
             }
-            _ => {
-                panic!("api error");
+            Err(e) => {
+                panic!("api error {}", e);
             }
         }
     }
